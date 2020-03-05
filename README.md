@@ -1,7 +1,7 @@
 NAME
 ====
 
-KHPH.pm6
+KHPH
 
 TITLE
 =====
