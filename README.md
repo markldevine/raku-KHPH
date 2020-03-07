@@ -92,7 +92,7 @@ The `myapp-pass.p6` script will manage the password stash of `myapp`.  Run it in
 The `myapp-pass.p6` script:
 
 ```perl6
-#!/usr/local/bin/perl6
+#!/usr/bin/env raku
 use KHPH;
 KHPH.new(:stash-path('/tmp/.myapp/password.khph')).expose.print;
 ```
@@ -120,7 +120,7 @@ Example II
 
 The following contrived `acme-connect` script, which connects to a fictitious ACME application, is implemented so that all passwords are stored in a common directory:
 
-    /var/raduko/.credentials
+    /var/raku/.credentials
 
 Ensure that all users can descend to that directory.  It would be ideal to set 1777 to the last directory in that path.
 
@@ -135,7 +135,7 @@ Different users run the script to connect to instances of the ACME application o
 The `acme-connect` script:
 
 ```perl6
-#!/opt/raku/bin/perl6
+#!/opt/bin/env raku
 use KHPH;
 sub MAIN (
     :$acme-host is required, #= ACME Host
@@ -145,8 +145,8 @@ sub MAIN (
     my KHPH $passwd .= new(
         :herald('ACME credentials'),
         :prompt($acme-id ~ '@' ~ $acme-host ~ ' password'),
-        :stash-path('/var/raduko/.credentials/' ~ $*USER ~ '/ACME/' ~ $acme-host ~ '/' ~ $acme-id),
-        :user-exclusive-at('/var/raduko/.credentials/' ~ $*USER),
+        :stash-path('/var/raku/.credentials/' ~ $*USER ~ '/ACME/' ~ $acme-host ~ '/' ~ $acme-id),
+        :user-exclusive-at('/var/raku/.credentials/' ~ $*USER),
     );
 
 #   Assemble the acme-manager command parts
@@ -185,15 +185,15 @@ Then **user_c** runs the `acme-connect` script from the **linux5** server using 
 
 The following hierarchy will result on the **linux5** server:
 
-    *         1777    /var/raduko/.credentials/
-    user_a    0700    /var/raduko/.credentials/user_a/
-    user_a    0700    /var/raduko/.credentials/user_a/ACME/
-    user_a    0700    /var/raduko/.credentials/user_a/ACME/acme1.myco.com/
-    user_a    0600    /var/raduko/.credentials/user_a/ACME/acme1.myco.com/APPUSERX
-    user_c    0700    /var/raduko/.credentials/user_c/
-    user_c    0700    /var/raduko/.credentials/user_c/ACME/
-    user_c    0700    /var/raduko/.credentials/user_c/ACME/acme2.myco.com/
-    user_c    0600    /var/raduko/.credentials/user_c/ACME/acme2.myco.com/APPUSERZ
+    *         1777    /var/raku/.credentials/
+    user_a    0700    /var/raku/.credentials/user_a/
+    user_a    0700    /var/raku/.credentials/user_a/ACME/
+    user_a    0700    /var/raku/.credentials/user_a/ACME/acme1.myco.com/
+    user_a    0600    /var/raku/.credentials/user_a/ACME/acme1.myco.com/APPUSERX
+    user_c    0700    /var/raku/.credentials/user_c/
+    user_c    0700    /var/raku/.credentials/user_c/ACME/
+    user_c    0700    /var/raku/.credentials/user_c/ACME/acme2.myco.com/
+    user_c    0600    /var/raku/.credentials/user_c/ACME/acme2.myco.com/APPUSERZ
 
 The `acme-connect` script will not prompt the users for their application passwords again when connecting to their application instances with their particular userids.  They will be able to run the `acme-connect` script as above, along with additional switches, in a job scheduler for unattended execution on the **linux5** server.  
 
