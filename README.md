@@ -22,9 +22,9 @@ Consider the egregious case where you need to run a program that absolutely requ
 
     myuid@myserver> /usr/local/bin/srvrconn -acct=USER72 -password=pAsSwOrD57! START INSTANCE ABC
 
-If you run it interactively, your shell history will record the entire command line for posterity, including the exposed password.  Then your system backup will make a copy of that, and who knows where that goes and for how long?  If it were executed via a job scheduler, the password would be exposed in multiple places: crontab, logs, email, backups, etc.
+If you run it interactively, your shell history will record the entire command line for posterity, including the exposed password.  Then your system backup will make a copy of that, and who knows where that goes and for how long?  If it were executed via a job scheduler, the password could be exposed in multiple places: crontab, logs, email, backups, etc.
 
-You might consider a solution where you put the secret characters in a directory/file and judiciously apply DAC controls to restrict access (chown/chgrp/chmod).  When it's time to use the password, you could read the secret string from the file and insert it where needed.  But **root** would be able to look at your secret with a quick `cat` command, and then your secret wouldn't be a secret anymore.
+You might consider a solution where you put the secret characters in a file and judiciously apply DAC controls to restrict access (chown/chgrp/chmod).  When it's time to use the password, you could read the secret string from the file and insert it where needed.  But **root** would be able to look at your secret with a quick `cat` command, and then your secret wouldn't be a secret anymore.
 
 This module offers you a way to reduce the likelihood of baring your secret information to curious people who are just poking around.  It also aims to reduce the number of surfaces where your private data is openly exposed.  It does not purport to fully protect your private information from prying eyes, but rather to make it opaque to glances.
 
@@ -40,7 +40,7 @@ This module will scramble a string, stash it wherever you specify, then expose i
 Synopsis
 ========
 
-```perl6
+```raku
 use KHPH;
 
 my $userid = 'testid';
@@ -91,7 +91,7 @@ The `myapp-pass.p6` script will manage the password stash of `myapp`.  Run it in
 
 The `myapp-pass.p6` script:
 
-```perl6
+```raku
 #!/usr/bin/env raku
 use KHPH;
 KHPH.new(:stash-path('/tmp/.myapp/password.khph')).expose.print;
@@ -134,7 +134,7 @@ Different users run the script to connect to instances of the ACME application o
 
 The `acme-connect` script:
 
-```perl6
+```raku
 #!/opt/bin/env raku
 use KHPH;
 sub MAIN (
