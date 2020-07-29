@@ -4,7 +4,7 @@
   "depends": [
     "Base64::Native",
     "Compress::Bzip2",
-    "Terminal::Readsecret"
+    "Terminal::Getpass"
   ],
   "description": "Keep Honest People Honest - String Obfuscation, Storage, & Retrieval",
   "license": "Artistic-2.0",
@@ -20,5 +20,5 @@
     "OBFUSCATE",
     "SECURITY"
   ],
-  "version": "0.1.1"
+  "version": "0.1.2"
 }

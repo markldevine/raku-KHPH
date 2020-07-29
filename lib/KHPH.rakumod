@@ -3,7 +3,7 @@ unit class KHPH:api<1>:auth<Mark Devine (mark@markdevine.com)>;
 use  Base64::Native;
 use  Compress::Bzip2;
 use  NativeCall;
-use  Terminal::Readsecret;
+use  Terminal::Getpass;
 
 constant HOST_NAME_MAX = 64;
 sub gethostname(utf8, size_t) returns int32 is native { * };
@@ -43,8 +43,8 @@ submethod TWEAK {
             my $secret2 = -2;
             while $secret1 ne $secret2 {
                 $secret1 = $secret2 = '';
-                while not $secret1 { $secret1 = getsecret('[1/2] ' ~ self.prompt ~ '> '); }
-                while not $secret2 { $secret2 = getsecret('[2/2] ' ~ self.prompt ~ '> '); }
+                while not $secret1 { $secret1 = getpass('[1/2] ' ~ self.prompt ~ '> '); }
+                while not $secret2 { $secret2 = getpass('[2/2] ' ~ self.prompt ~ '> '); }
             }
             $!secret = $secret2;
         }
