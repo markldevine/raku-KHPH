@@ -87,9 +87,9 @@ Return the secret as a clear-text Str.
 Example I
 =========
 
-The `myapp-pass.p6` script will manage the password stash of `myapp`.  Run it interactively one time to stash your secret, then you (not someone else) can run it anytime to expose the secret.
+The `myapp-pass.raku` script will manage the password stash of `myapp`.  Run it interactively one time to stash your secret, then you (not someone else) can run it anytime to expose the secret.
 
-The `myapp-pass.p6` script:
+The `myapp-pass.raku` script:
 
 ```raku
 #!/usr/bin/env raku
@@ -99,7 +99,7 @@ KHPH.new(:stash-path('/tmp/.myapp/password.khph')).expose.print;
 
 Run ~/myapp-pass.p6 once interactively to stash the secret:
 
-    me@mysystem> ~/myapp-pass.p6 && echo
+    me@mysystem> ~/myapp-pass.raku && echo
     [1/2] Enter secret> aW3S0m3pA55w0rDI'LlN3VeRr3m3mB3R
     [2/2] Enter secret> aW3S0m3pA55w0rDI'LlN3VeRr3m3mB3R
     aW3S0m3pA55w0rDI'LlN3VeRr3m3mB3R
