@@ -97,7 +97,7 @@ use KHPH;
 KHPH.new(:stash-path('/tmp/.myapp/password.khph')).expose.print;
 ```
 
-Run ~/myapp-pass.p6 once interactively to stash the secret:
+Run ~/myapp-pass.raku once interactively to stash the secret:
 
     me@mysystem> ~/myapp-pass.raku && echo
     [1/2] Enter secret> aW3S0m3pA55w0rDI'LlN3VeRr3m3mB3R
@@ -109,7 +109,7 @@ Run ~/myapp-pass.p6 once interactively to stash the secret:
 
 Then in your application client:
 
-    me@mysystem> /usr/bin/dsmadmc -id=MYSELF -password=`~/myapp-pass.p6` QUERY SESSION FORMAT=DETAILED
+    me@mysystem> /usr/bin/dsmadmc -id=MYSELF -password=`~/myapp-pass.raku` QUERY SESSION FORMAT=DETAILED
 
 The password will be inserted into the command line and authentication will succeed.
 
