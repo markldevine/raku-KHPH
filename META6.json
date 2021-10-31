@@ -1,5 +1,5 @@
 {
-  "auth": "github:markldevine",
+  "auth": "zef:markldevine",
   "authors": [ "Mark Devine <mark@markdevine.com>" ],
   "depends": [
     "Base64::Native",
@@ -20,5 +20,5 @@
     "OBFUSCATE",
     "SECURITY"
   ],
-  "version": "0.1.2"
+  "version": "0.2.0"
 }
