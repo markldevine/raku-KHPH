@@ -17,7 +17,7 @@ You might consider a solution where you put the secret characters in a file and 
 
 This module offers you a way to reduce the likelihood of baring your secret information to curious people who are just poking around.  It helps reduce the number of surfaces where your private data is openly exposed.  It does not purport to fully protect your private information from prying eyes, rather to make it opaque to glances.
 
-> ALWAYS ENCRYPT CUSTOMER DATA.  Customer data and other types of sensitive information warrant real security, not a privacy fence.
+> ALWAYS ENCRYPT SENSITIVE DATA.  Sensitive information that cannot be exposed warrants real security, not a privacy fence.
 
 Description
 ===========
@@ -106,22 +106,6 @@ Example II
 ==========
 
 When crafting REST API clients, servers will often issue session tokens for subsequent connections.  These authenticating session tokens remain valid for long intervals of time (hours, days, weeks) and should be protected like passwords.  When stashing a token locally for reuse, minimally use KHPH instead of clear-text so that it isn't easily viewed by passersby.
-
-Usage Recommendation
-====================
-
-Since the intent of using this module is to obfuscate, it is recommended to specify a :stash-path that doesn't indicate what's being stored.
-
-This looks innocuous:
-
-    :stash-path($*HOME ~ '/.metrics/' ~ $account ~ '/' ~ $server ~ '/stats')
-
-This wouldn't generate much interest:
-
-    :stash-path('/var/dynaplex/.perf/' ~ $account ~ '/dynaplex.' ~ $server)
-    :user-exclusive-at('/var/dynaplex/.perf/' ~ $account)
-    
-These misleading paths result in added camouflage, and every little bit helps.
 
 Limitations
 ===========
