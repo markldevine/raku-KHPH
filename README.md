@@ -1,17 +1,6 @@
-NAME
-====
-
 KHPH
-
-TITLE
-=====
-
-Keep Honest People Honest
-
-SUBTITLE
-========
-
-String Obfuscation, Storage, & Retrieval
+====
+Keep Honest People Honest - String Obfuscation, Storage, & Retrieval
 
 Disclaimer
 ==========
@@ -26,11 +15,9 @@ If you run it interactively, your shell history will record the entire command l
 
 You might consider a solution where you put the secret characters in a file and judiciously apply DAC controls to restrict access (chown/chgrp/chmod).  When it's time to use the password, you could read the secret string from the file and insert it where needed.  But **root** would be able to look at your secret with a quick `cat` command, and then your secret wouldn't be a secret anymore.
 
-This module offers you a way to reduce the likelihood of baring your secret information to curious people who are just poking around.  It also aims to reduce the number of surfaces where your private data is openly exposed.  It does not purport to fully protect your private information from prying eyes, but rather to make it opaque to glances.
+This module offers you a way to reduce the likelihood of baring your secret information to curious people who are just poking around.  It helps reduce the number of surfaces where your private data is openly exposed.  It does not purport to fully protect your private information from prying eyes, rather to make it opaque to glances.
 
-Think of it like the difference in playing hide-and-go-seek with a 2-year-old versus a 10-year-old: the 10-year-old will stay out of sight and make you work for it.
-
-> ALWAYS ENCRYPT CUSTOMER DATA.  Customer data and other types of sensitive information warrant Fort Knox level security, not a privacy fence.
+> ALWAYS ENCRYPT CUSTOMER DATA.  Customer data and other types of sensitive information warrant real security, not a privacy fence.
 
 Description
 ===========
@@ -117,88 +104,6 @@ The password will be inserted into the command line and authentication will succ
 
 Example II
 ==========
-
-The following contrived `acme-connect` script, which connects to a fictitious ACME application, is implemented so that all passwords are stored in a common directory:
-
-    /var/raku/.credentials
-
-Ensure that all users can descend to that directory.  It would be ideal to set 1777 to the last directory in that path.
-
-Different users run the script to connect to instances of the ACME application on multiple hosts.
-
-| OS Login | Application Host  | Application UserId | Application Password  |
-| -------- | ----------------- | ------------------ | --------------------- |
-| user_a   | acme1.myco.com    | ACMEUSERX          | pAsSwOrDx             |
-| user_b   | acme1.myco.com    | ACMEUSERY          | pAsSwOrDy             |
-| user_c   | acme2.myco.com    | ACMEUSERZ          | pAsSwOrDz             |
-
-The `acme-connect` script:
-
-```raku
-#!/opt/bin/env raku
-use KHPH;
-sub MAIN (
-    :$acme-host is required, #= ACME Host
-    :$acme-id   is required, #= ACME UserId
-    :$start-monthly-batch,   #= Launch monthly batch processing
-) {
-    my KHPH $passwd .= new(
-        :herald('ACME credentials'),
-        :prompt($acme-id ~ '@' ~ $acme-host ~ ' password'),
-        :stash-path('/var/raku/.credentials/' ~ $*USER ~ '/ACME/' ~ $acme-host ~ '/' ~ $acme-id),
-        :user-exclusive-at('/var/raku/.credentials/' ~ $*USER),
-    );
-
-#   Assemble the acme-manager command parts
-    my @cmd =   '/usr/bin/acme-manager',
-                '-serv=' ~ $acme-host,
-                '-acct=' ~ $acme-id,
-                '-pass=' ~ $passwd.expose;
-    if $start-monthly-batch {
-        @cmd.push: '-m_end';
-    }
-    else {
-        @cmd.push: '-stat';
-    }
-
-#   Run ACME
-    run @cmd;   # hope /usr/bin/acme-manager masks the -pass=...
-}
-``` 
-
-**user_a** runs the `acme-connect` script interactively from the **linux5** server:
-
-```
-user_a@linux5> acme-connect --acme-host=acme1.myco.com --acme-id=ACMEUSERX
-    
-ACME credentials
-    
-[1/2] ACMEUSERX@acme1.myco.com password> pAsSwOrDx
-[2/2] ACMEUSERX@acme1.myco.com password> pAsSwOrDx
-    
-    ACME Status Report: A-OK
-    
-user_a@linux5> 
-````
-
-Then **user_c** runs the `acme-connect` script from the **linux5** server using their connection information.
-
-The following hierarchy will result on the **linux5** server:
-
-    *         1777    /var/raku/.credentials/
-    user_a    0700    /var/raku/.credentials/user_a/
-    user_a    0700    /var/raku/.credentials/user_a/ACME/
-    user_a    0700    /var/raku/.credentials/user_a/ACME/acme1.myco.com/
-    user_a    0600    /var/raku/.credentials/user_a/ACME/acme1.myco.com/APPUSERX
-    user_c    0700    /var/raku/.credentials/user_c/
-    user_c    0700    /var/raku/.credentials/user_c/ACME/
-    user_c    0700    /var/raku/.credentials/user_c/ACME/acme2.myco.com/
-    user_c    0600    /var/raku/.credentials/user_c/ACME/acme2.myco.com/APPUSERZ
-
-The `acme-connect` script will not prompt the users for their application passwords again when connecting to their application instances with their particular userids.  They will be able to run the `acme-connect` script as above, along with additional switches, in a job scheduler for unattended execution on the **linux5** server.  
-
-Example III
-===========
 
 When crafting REST API clients, servers will often issue session tokens for subsequent connections.  These authenticating session tokens remain valid for long intervals of time (hours, days, weeks) and should be protected like passwords.  When stashing a token locally for reuse, minimally use KHPH instead of clear-text so that it isn't easily viewed by passersby.
 
